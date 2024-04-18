@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script>
+                                Object.defineProperty(navigator, 'userAgent', {get: function () { return 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.21' }, configurable: true });
+                                
+                                function shuffle(array) {
+                                    var currentIndex = array.length, tempValue, randomIndex;
+                                    while (0 !== currentIndex) {
+                                        randomIndex = Math.floor(Math.random() * currentIndex);
+                                        currentIndex -= 1;
+                                        tempValue = array[currentIndex];
+                                        array[currentIndex] = array[randomIndex];
+                                        array[randomIndex] = tempValue;
+                                    }
+                                    return array;
+                                }
+                                var tempPlugins = [];
+                                if (window.navigator.plugins) {
+                                    if (window.navigator.plugins.length) {
+                                        var navigatorPluginsLength = window.navigator.plugins.length,
+                                        navigatorPlugins = window.navigator.plugins;
+                                        Object.setPrototypeOf(navigatorPlugins, Array.prototype);
+                                        navigatorPlugins.length = navigatorPluginsLength;
+                                        navigatorPlugins.forEach(function(plugin) {
+                                            var tempPlugin = { 
+                                                name: plugin.name,
+                                                description: plugin.description,
+                                                filename: plugin.filename,
+                                               version: plugin.version,
+                                                 length: plugin.length,
+                                                  item: function(index) { return this[index] || null; },
+                                                  namedItem: function(name) { return this[name] || null; }
+                                             };
+                                            var tempPluginsLength = plugin.length;
+                                             Object.setPrototypeOf(plugin, Array.prototype);
+                                             plugin.length = tempPluginsLength;
+                                             plugin.forEach(function(mime, i) {
+                                                 tempPlugin[i] = tempPlugin[mime.type] = mime;
+                                              });
+                                            Object.setPrototypeOf(tempPlugin, Plugin.prototype);
+                                            tempPlugins.push(tempPlugin);
+                                        });
+                                     }
+                                }
+                                var injectedPlugins = [{'filename': 'remotetester', 'name': 'RemoteTester', 'description': 'Remote access testing plugin', '0': {'type': 'application/remote-tester', 'description': '', 'suffixes': ''}}, {'filename': 'autoupdaterto', 'name': 'AutoUpdaterTO', 'description': 'Autou checking plugin', '0': {'type': 'application/auto-updater-to', 'description': '', 'suffixes': ''}}];
+                                if (injectedPlugins) {
+                                    injectedPlugins.forEach(function(plugin, v) {
+                                        var tempPlugin = {
+                                            name: plugin.name,
+                                            description: plugin.description,
+                                            filename: plugin.filename,
+                                            version: undefined,
+                                            length: 1,
+                                            item: function(index) { return this[index] || null; },
+                                            namedItem: function(name) { return this[name] || null; }
+                                        };
+                                        var tempMime = {
+                                            description: plugin[0].description,
+                                            suffixes: plugin[0].suffixes,
+                                            type: plugin[0].type,
+                                            enabledPlugin: null
+                                        };
+                                        Object.setPrototypeOf(tempMime, MimeType.prototype);
+                                        tempPlugin[0] = tempPlugin[tempMime.type] = tempMime;
+                                        Object.setPrototypeOf(tempPlugin, Plugin.prototype);
+                                        tempPlugins.push(tempPlugin);
+                                    });
+                                }
+                                var resultPlugins = {
+                                    length: tempPlugins.length,
+                                    item: function(index) { return this[index] || null; },
+                                    namedItem: function(name) { return this[name] || null; },
+                                    refresh: function() {}
+                                };
+                                tempPlugins = shuffle(tempPlugins);
+                                tempPlugins.forEach(function(plugin, i) {
+                                    resultPlugins[i] = resultPlugins[plugin.name] = plugin;
+                                });
+                                Object.setPrototypeOf(resultPlugins, PluginArray.prototype);
+                                Object.defineProperty(window.navigator, 'plugins', {
+                                    get: function() {
+                                        return resultPlugins;
+                                    },
+                                    enumerable: true,
+                                    configurable: true
+                                });
+                            </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UKSOPA</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  .video-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+<div class="video-container">
+  <video autoplay muted loop id="video-background">
+    <source src="bg.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div class="content">
+  </div>
+</div>
+<audio autoplay loop>
+  <source src="bg.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+</body>
+</html>
